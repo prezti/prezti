@@ -24,8 +24,7 @@ export function CLogo({
 	hideImage,
 	logoImage = false,
 }: LogoProps) {
-	const shouldShowFullText = hideImage || className?.includes('flex-col')
-	const classBase = 'flex justify-center' + (shouldShowFullText ? ' gap-2' : ' gap-0')
+	const classBase = 'flex justify-center'
 	const classAddition = collapsed ? 'items-end' : 'items-end'
 	const defaultClassName = cn(classBase, classAddition)
 	const content = (
@@ -38,13 +37,8 @@ export function CLogo({
 			{!collapsed && (
 				<div className={cn(className, textClassName)}>
 					<LogoText
-						text={shouldShowFullText ? APP_CONFIG.appName : APP_CONFIG.appName.slice(1)}
-						className={cn(
-							'w-full h-[29px]',
-							className,
-							textClassName,
-							shouldShowFullText ? '' : '-ms-1'
-						)}
+						text={APP_CONFIG.appName}
+						className={cn('w-full h-[29px]', className, textClassName)}
 					/>
 				</div>
 			)}
