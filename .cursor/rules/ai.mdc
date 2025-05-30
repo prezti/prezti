@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+#### **System Prompt Security**
+
+- **NEVER** send system prompts from frontend
+- Always select prompts by ID from backend `sys-prompts/` folder
+- Process all context data on backend before sending to AI
+
+
+#### **Data context for AI**
+- Translate IDs or other technical data to human-readable names (label IDs → label names). If there is unneeded data for the ai to understand the context clean it up. If the data is too nested to be easily understood by a human at a glance, flatten it.
+

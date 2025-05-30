@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Observability & Monitoring**
+
+- **Error Reporting:** Report all unexpected errors (caught in `try/catch`, Error Boundaries) to Posthog (they have a sentry alternative), including relevant context (user ID, workspace ID, tRPC procedure name, input parameters where safe/non-sensitive). Tag errors appropriately.
+- **Analytics:** Track key user events in PostHog (e.g., `item_created`, `ai_column_added`, `file_uploaded`, `template_used`, feature activation events, core workflow completions). Include relevant properties for segmentation (e.g., workspace ID, plan type).
+
+- **AI Tracing:** For operations involving LLM calls (via tRPC or Server Actions), integrate with Posthog(They have a langfuse alternative) to trace the request lifecycle, including prompts, responses, latency, token usage (estimated/actual), model used, and user feedback if available. Ensure sensitive data within prompts/responses is masked appropriately before logging.

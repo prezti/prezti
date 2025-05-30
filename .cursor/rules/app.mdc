@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## App specific guidelines
+
+**Prezti**
+
+    **Primary Structure: `Workspaces -> Slides`**
+
+    - **Workspaces:** Top-level containers for user organizations
+    - **Slides:** Presentation slides
+    - **AI Chats:** Context-aware AI chat interfaces embedded throughout the workspace for assistance, data querying, and execution.
+    - 
+- **AI / GPT Features:** Integrate various AI capabilities (summarization, transformation, OCR, classification, vector search) via tRPC procedures. Offload potentially long-running (>10-15 seconds) or computationally intensive AI tasks to background jobs managed via the `after()` pattern shown above to avoid blocking tRPC requests or hitting serverless function timeouts. Use Supabase pgvector for similarity searches.
+- **Edge Case Handling:** Before coding any feature or component, explicitly list potential edge cases (e.g., empty states for lists/boards, error states from API calls, race conditions in collaborative features, permission denied scenarios, handling large text inputs/outputs, slow network conditions, API rate limits, AI model errors/timeouts/hallucinations) and plan how to handle them gracefully in both the UI (feedback, disabled states, retries) and backend logic (error logging, fallback values, transaction rollbacks). Implement starting with the simplest cases first.

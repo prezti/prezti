@@ -1,0 +1,56 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+**Background Jobs & Long-Running Operations**
+
+For AI operations or tasks taking >10-15 seconds:
+
+```typescript
+// Server Action or tRPC mutation
+async function processLongRunningAI(data: ProcessData) {
+	// Return immediately with job ID
+	const jobId = generateJobId()
+
+	// Process in background
+	after(async () => {
+		try {
+			const result = await performLongRunningAI(data)
+
+			// Send result back via Supabase Realtime
+			await supabase.channel('job-updates').send({
+				type: 'broadcast',
+				event: 'job_complete',
+				payload: { jobId, result, status: 'success' },
+			})
+		} catch (error) {
+			// Send error back
+			await supabase.channel('job-updates').send({
+				type: 'broadcast',
+				event: 'job_error',
+				payload: { jobId, error: error.message, status: 'error' },
+			})
+		}
+	})
+
+	return { jobId, status: 'processing' }
+}
+
+// Client-side listener
+useEffect(() => {
+	const channel = supabase.channel('job-updates')
+
+	channel.on('broadcast', { event: 'job_complete' }, (payload) => {
+		if (payload.jobId === currentJobId) {
+			setResult(payload.result)
+			setStatus('complete')
+		}
+	})
+
+	channel.subscribe()
+	return () => channel.unsubscribe()
+}, [currentJobId])
+
+```

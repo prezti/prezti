@@ -1,0 +1,36 @@
+---
+description: 
+globs: .ts
+alwaysApply: false
+---
+**Serverless Limitations & Best Practices**
+
+**Critical Serverless Constraints**
+
+- **Stateless Functions:** All serverless functions (tRPC procedures, API routes, Server Actions) are stateless and ephemeral. Each invocation starts fresh with no persistent memory between requests.
+
+**Rate Limiting & Caching**
+
+- **Leverage Supabase Features First:** Use Supabase's built-in capabilities (Auth rate limiting, RLS policies, database constraints) before adding external services.
+
+- **Redis for Specialized Rate Limiting:** Only use Redis (Upstash) for custom rate limiting scenarios that Supabase doesn't handle natively:
+
+```typescript
+// ✅ GOOD: Use Supabase Auth built-in rate limiting first
+// Supabase handles auth rate limiting automatically
+
+// ✅ GOOD: Redis only for custom API rate limiting
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(10, '10 s'),
+});
+
+// Use for custom API endpoints requiring specific rate limits
+```
+
+- **Caching Strategy:** Prefer Supabase's built-in caching and PostgREST optimizations. Use Redis only for frequently accessed, computation-heavy data that doesn't fit Supabase's caching model.
+
+

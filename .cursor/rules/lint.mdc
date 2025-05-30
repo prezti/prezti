@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Rule Enforcement**
+
+- **Linting/Formatting:** Code MUST adhere to configured ESLint and Prettier rules (ensure configs align with these guidelines). Commits should ideally be blocked by pre-commit hooks if linting/formatting fails.
+
+- **TypeScript:** Strict TypeScript settings (`strict: true` in `tsconfig.json`) MUST be enabled. Avoid `any` type; use `unknown` and type guards or Zod parsing instead. Justify any unavoidable `any` with a clear `// eslint-disable-next-line @typescript-eslint/no-explicit-any` comment explaining the reason.

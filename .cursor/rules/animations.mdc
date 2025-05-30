@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+#### **Animations**
+- Never use scale animations on hover, it just looks pixelated.
+
+- Use Framer Motion for complex or physics-based UI animations and page/layout transitions where simple CSS transitions are insufficient. Prioritize performant animations (use hardware acceleration, avoid layout thrashing). Ensure animations are subtle, enhance the UX, and respect the `prefers-reduced-motion` media query.

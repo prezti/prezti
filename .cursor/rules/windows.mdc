@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- **Always Use Windows Commands** - When using commands for function calling, always use Windows commands. Common substitutions include:
+
+    - Use `type` instead of `cat` for displaying file contents
+    - Use `dir` instead of `ls` for listing directory contents
+    - Use `findstr` instead of `grep` for searching text
+    - Use `copy` instead of `cp` for copying files
+    - Use `move` instead of `mv` for moving files
+    - Use `del` or `erase` instead of `rm` for deleting files
+    - Use `mkdir` instead of `mkdir` (same in both)
+    - Use `echo %CD%` instead of `pwd` to show current directory
+    - Append `| more` instead of `| less` for pagination
+    - For Windows Command Prompt, use `&` or `&&` for command chaining rather than `;` or `&&` in bash
+
+    - Use `findstr /R`

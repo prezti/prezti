@@ -1,0 +1,19 @@
+<svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aurora1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#06b6d4;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:0.4" />
+    </linearGradient>
+    <linearGradient id="aurora2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.7" />
+      <stop offset="50%" style="stop-color:#ec4899;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0.3" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Aurora wave patterns -->
+  <path d="M0,100 Q100,50 200,80 T400,60" stroke="url(#aurora1)" stroke-width="20" fill="none" opacity="0.8"/>
+  <path d="M0,120 Q150,70 300,90 T400,80" stroke="url(#aurora2)" stroke-width="15" fill="none" opacity="0.6"/>
+  <path d="M0,140 Q120,90 240,110 T400,100" stroke="url(#aurora1)" stroke-width="10" fill="none" opacity="0.4"/>
+</svg> 

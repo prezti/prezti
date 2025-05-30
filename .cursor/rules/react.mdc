@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Follow Next.js docs for Data Fetching, Rendering, and Routing best practices.
+
+**Custom Hooks**
+
+- Create custom hooks (`useMyLogic`) to encapsulate reusable component logic, stateful logic, or interactions with browser APIs (e.g., `useDebounce`, `useIntersectionObserver`, `useWindowSize`).
+
+- Keep hooks focused on a single responsibility and adhere to the Rules of Hooks.

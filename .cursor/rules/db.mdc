@@ -1,0 +1,31 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## DB
+
+**Supabase Integration**
+
+- Use the Supabase JS client for **Authentication**, **Storage**, **Realtime subscriptions**, and **all Database CRUD operations (select, insert, update, delete)**.
+- Implement **Row Level Security (RLS)** policies on **all** relevant Supabase tables as a critical security layer, enforcing multi-tenancy (workspace isolation) and ownership checks at the database level. **This is mandatory.**
+- Use Supabase **Storage** for file uploads/downloads, managing access via RLS policies and potentially signed URLs generated server-side (within tRPC procedures).
+- Leverage Supabase **Realtime** for features requiring live updates (e.g., collaborative editing presence, notifications), subscribing on the client.
+- Use Supabase **Edge Functions** only if absolutely necessary for tasks needing to run geographically close to the database or requiring direct Supabase context not easily achievable via tRPC/Next.js API routes.
+- Utilize **pgvector** via direct SQL queries executed through the Supabase client within tRPC procedures for vector similarity searches.
+- Adhere to Supabase best practices for Auth, Storage, and Realtime features.
+
+
+**Drizzle ORM Usage**
+
+- Use Drizzle ORM **exclusively** for:
+    - Defining the database schema in TypeScript (`src/server/db/schema.ts`)
+    - Generating SQL migration files using `drizzle-kit`
+    - Applying migrations to the Supabase database
+- **Do NOT use Drizzle's query builder (`db.query...`, `db.select()...`) for application runtime database operations.** Use the Supabase JS client for all runtime database interactions.
+- Adhere to Drizzle best practices for database design.
+
+**Realtime Pattern**
+
+
+Realtime updates (e.g., for board collaboration presence, cell updates) primarily use Supabase Realtime listeners on the client. These listeners should trigger `trpcUtils.invalidateQueries()` for relevant queries to refetch data via React Query, ensuring UI consistency with the latest server state. Consider potential race conditions between mutations and realtime updates.

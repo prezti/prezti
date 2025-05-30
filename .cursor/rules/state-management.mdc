@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**State Management**
+
+- Use local state (`useState`, `useReducer`) for component-specific, non-shared data.
+- Use **Zustand** for managing global client-side state or state that needs to be shared across multiple, potentially unrelated components (e.g., UI state like sidebar visibility, user preferences loaded client-side, potentially managing complex form state across steps). Create separate stores for distinct domains of state.
+- Leverage React Context API sparingly, primarily for static, low-frequency update values like theme or authentication status propagation, where Zustand might be overkill.
+
+- Utilize **tRPC with React Query** for managing **all server state**. This includes fetching, background synchronization, request deduplication, and mutation updates.

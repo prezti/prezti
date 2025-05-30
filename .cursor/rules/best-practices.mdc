@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+#### **Performance Optimization**
+
+- Use store pointers for efficient context data access
+- Implement context caching with TTL (30s primary, 60s mentions)
+- Cache mention suggestions and search results
+- Minimize context payload size through smart data selection
+
+#### **Code Best Practices**
+- Separate functions for reuse
+- Expect modularity
+
+- Make a rough, unoptimized version outline in text when requested a new feature, then refine it and include edge cases and productionazing of it

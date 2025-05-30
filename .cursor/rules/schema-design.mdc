@@ -1,0 +1,204 @@
+---
+description: 
+globs: *.ts
+alwaysApply: false
+---
+# Schema Design Guidelines
+
+## Using Supabase Generated Schemas
+
+1. **Schema Location**: Place in `src/packages/{domain}/{domain}.schema.ts`
+
+2. **Import Patterns**:
+   ```typescript
+   import { 
+     TableRow, 
+     TableInsert,
+     TableUpdate,
+     EnumType,
+     json
+   } from '@/lib/db/supazod/supazod-schemas'
+   ```
+
+3. **Direct Usage**: Directly use the Supabase generated schemas rather than creating custom ones:
+   ```typescript
+   import { 
+     ConstantsRow,  // Full table row type
+     ConstantsInsert,  // Insert schema
+     ConstantsUpdate,  // Update schema
+     DependentEntityType  // Enum type
+   } from '@/lib/db/supazod/supazod-schemas'
+   
+   // Export them for use in routers
+   export { ConstantsRow, ConstantsInsert, ConstantsUpdate }
+   ```
+
+4. **Extending Generated Schemas**: Extend the generated schemas when additional validation is needed:
+   ```typescript
+   // Extend an insert schema with additional validation
+   export const createEntitySchema = EntityInsert
+     .extend({
+       // Add additional client-side validation
+       name: z.string().min(3, "Name must be at least 3 characters"),
+       // Add fields not in the database schema
+       tempSettings: z.record(z.string(), z.unknown()).optional()
+     })
+     // Remove server-side fields
+     .omit({ 
+       created_at: true,
+       updated_at: true,
+       id: true
+     })
+   ```
+
+5. **Field Conversion**: Convert between snake_case (database) and camelCase (API):
+   ```typescript
+   export const createEntitySchema = EntityInsert
+     .pick({
+       workspace_id: true,
+       title: true,
+       description: true
+     })
+     .extend({
+       // Add camelCase versions
+       workspaceId: z.string().uuid(),
+       customField: z.string().optional()
+     })
+     .omit({
+       // Remove the snake_case versions
+       workspace_id: true
+     })
+   ```
+
+6. **Enums**: Always use the generated enum types:
+   ```typescript
+   import { DependentEntityType } from '@/lib/db/supazod/supazod-schemas'
+   
+   export const mySchema = z.object({
+     entityType: DependentEntityType,
+     // rest of schema...
+   })
+   ```
+
+## JSON Data Handling
+
+1. **Raw JSON Fields**: Use the generated `json` type for raw JSON fields:
+   ```typescript
+   import { json } from '@/lib/db/supazod/supazod-schemas'
+   
+   export const schemaWithJsonField = z.object({
+     metadata: json.optional()
+   })
+   ```
+
+2. **Typed JSON**: Use record or object type for validated JSON:
+   ```typescript
+   export const schemaWithTypedJson = z.object({
+     settings: z.object({
+       isEnabled: z.boolean(),
+       threshold: z.number()
+     }),
+     metadata: z.record(z.string(), z.unknown()).optional()
+   })
+   ```
+
+## Common Schema Patterns
+
+1. **CRUD Operation Schemas**:
+   ```typescript
+   import { 
+     EntityInsert, 
+     EntityUpdate, 
+     EntityRow 
+   } from '@/lib/db/supazod/supazod-schemas'
+   
+   // Create - use the insert schema directly
+   export const createSchema = EntityInsert
+   
+   // Read by ID
+   export const getByIdSchema = z.object({
+     id: z.string().uuid(),
+     workspaceId: z.string().uuid()
+   })
+   
+   // Update - wrap with ID and workspace scoping
+   export const updateSchema = z.object({
+     id: z.string().uuid(),
+     workspaceId: z.string().uuid(),
+     updates: EntityUpdate.omit({ id: true })
+   })
+   
+   // Delete
+   export const deleteSchema = z.object({
+     id: z.string().uuid(),
+     workspaceId: z.string().uuid()
+   })
+   ```
+
+2. **List/Query Schema**:
+   ```typescript
+   export const listSchema = z.object({
+     workspaceId: z.string().uuid(),
+     page: z.number().int().positive().optional(),
+     pageSize: z.number().int().positive().max(100).optional(),
+     sortBy: z.enum(['createdAt', 'name', 'status']).optional(),
+     sortOrder: z.enum(['asc', 'desc']).optional(),
+     filter: z.object({
+       status: z.enum(['active', 'archived', 'draft']).optional(),
+       search: z.string().optional()
+     }).optional()
+   })
+   ```
+
+## Schema Export Patterns
+
+1. **Named Exports**:
+   ```typescript
+   // Export individual schemas
+   export const createEntitySchema = /* ... */
+   export const updateEntitySchema = /* ... */
+   export const deleteEntitySchema = /* ... */
+   
+   // Also export the generated types
+   export { EntityRow, EntityInsert, EntityUpdate }
+   ```
+
+2. **Grouped Exports**:
+   ```typescript
+   // Group related schemas
+   export const entitySchemas = {
+     create: createEntitySchema,
+     update: updateEntitySchema,
+     delete: deleteEntitySchema,
+     getById: getByIdSchema,
+     list: listEntitySchema
+   }
+   ```
+
+## Integration with tRPC
+
+```typescript
+import { 
+  entitySchemas,
+  EntityRow
+} from './entity.schema'
+
+export const entityRouter = createTRPCRouter({
+  create: protectedProcedure
+    .input(entitySchemas.create)
+    .mutation(async ({ input }) => {
+      // Input is fully typed and validated
+    }),
+    
+  getAll: protectedProcedure
+    .input(entitySchemas.list)
+    .query(async ({ input }): Promise<EntityRow[]> => {
+      // Return type uses the generated row type
+    })
+})
+```
+
+
+
+
+

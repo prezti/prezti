@@ -1,0 +1,60 @@
+<svg width="200" height="300" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lavenderGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#c084fc;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0.5" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Lavender stem 1 -->
+  <g transform="translate(50,50)">
+    <!-- Stem -->
+    <path d="M0,200 L5,20" stroke="#22c55e" stroke-width="3" fill="none" opacity="0.8"/>
+    
+    <!-- Lavender flowers -->
+    <ellipse cx="5" cy="25" rx="3" ry="8" fill="url(#lavenderGradient)" opacity="0.9"/>
+    <ellipse cx="4" cy="35" rx="3" ry="8" fill="url(#lavenderGradient)" opacity="0.8"/>
+    <ellipse cx="6" cy="45" rx="3" ry="8" fill="url(#lavenderGradient)" opacity="0.9"/>
+    <ellipse cx="3" cy="55" rx="3" ry="8" fill="url(#lavenderGradient)" opacity="0.7"/>
+    <ellipse cx="7" cy="65" rx="3" ry="8" fill="url(#lavenderGradient)" opacity="0.8"/>
+    <ellipse cx="4" cy="75" rx="3" ry="8" fill="url(#lavenderGradient)" opacity="0.9"/>
+    
+    <!-- Small leaves -->
+    <ellipse cx="-2" cy="100" rx="1.5" ry="8" fill="#22c55e" opacity="0.6" transform="rotate(-30)"/>
+    <ellipse cx="8" cy="120" rx="1.5" ry="8" fill="#22c55e" opacity="0.6" transform="rotate(30)"/>
+  </g>
+  
+  <!-- Lavender stem 2 -->
+  <g transform="translate(120,70)">
+    <!-- Stem -->
+    <path d="M0,180 L-3,15" stroke="#22c55e" stroke-width="2.5" fill="none" opacity="0.8"/>
+    
+    <!-- Lavender flowers -->
+    <ellipse cx="-3" cy="20" rx="2.5" ry="7" fill="url(#lavenderGradient)" opacity="0.8"/>
+    <ellipse cx="-4" cy="30" rx="2.5" ry="7" fill="url(#lavenderGradient)" opacity="0.9"/>
+    <ellipse cx="-2" cy="40" rx="2.5" ry="7" fill="url(#lavenderGradient)" opacity="0.7"/>
+    <ellipse cx="-5" cy="50" rx="2.5" ry="7" fill="url(#lavenderGradient)" opacity="0.8"/>
+    <ellipse cx="-1" cy="60" rx="2.5" ry="7" fill="url(#lavenderGradient)" opacity="0.9"/>
+    
+    <!-- Small leaves -->
+    <ellipse cx="-8" cy="90" rx="1" ry="6" fill="#22c55e" opacity="0.5" transform="rotate(-45)"/>
+    <ellipse cx="2" cy="110" rx="1" ry="6" fill="#22c55e" opacity="0.5" transform="rotate(45)"/>
+  </g>
+  
+  <!-- Lavender stem 3 -->
+  <g transform="translate(80,90)">
+    <!-- Stem -->
+    <path d="M0,160 L2,10" stroke="#22c55e" stroke-width="2" fill="none" opacity="0.7"/>
+    
+    <!-- Lavender flowers -->
+    <ellipse cx="2" cy="15" rx="2" ry="6" fill="url(#lavenderGradient)" opacity="0.7"/>
+    <ellipse cx="1" cy="25" rx="2" ry="6" fill="url(#lavenderGradient)" opacity="0.8"/>
+    <ellipse cx="3" cy="35" rx="2" ry="6" fill="url(#lavenderGradient)" opacity="0.6"/>
+    <ellipse cx="0" cy="45" rx="2" ry="6" fill="url(#lavenderGradient)" opacity="0.7"/>
+    
+    <!-- Small leaves -->
+    <ellipse cx="-3" cy="70" rx="0.8" ry="5" fill="#22c55e" opacity="0.4" transform="rotate(-20)"/>
+    <ellipse cx="5" cy="85" rx="0.8" ry="5" fill="#22c55e" opacity="0.4" transform="rotate(20)"/>
+  </g>
+</svg> 

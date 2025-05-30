@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Zod Usage**
+
+- Define Zod schemas for:
+    - tRPC procedure inputs and outputs (explicit schemas required for inputs, strongly recommended for outputs for clarity/reuse)
+    - React Hook Form validation
+    - Parsing/validating external API responses or webhook payloads within API routes or Server Actions
+    - 
+
+**React Hook Form Integration**
+
+- Use `useForm` hook from React Hook Form for all forms.
+- Integrate with Zod using `@hookform/resolvers/zod` for schema-based validation.
+- Leverage `Controller` component for integrating with UI libraries like Shadcn UI, or use `register` for standard inputs.
+- Manage form state (`isSubmitting`, `errors`, `isValid`) effectively.
+
+
+- Handle form submission logic, typically by calling a tRPC mutation within the `onSubmit` handler.

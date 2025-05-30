@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Design System**
+
+- Adhere strictly to the Shadcn UI component library and its underlying Radix UI primitives. Build custom components by composing Shadcn/Radix primitives.
+- Ensure consistent use of the defined TailwindCSS theme (colors, typography, spacing, radius) via utility classes and CSS variables. **Always ensure dark mode compatibility by using appropriate Tailwind classes (`dark:...`) or CSS variables.**
+- Always prepare for RTL, if there is anything that needs for example margin right of 10 in tailwind, you use "me-10" instead of "mr-10". The users will be using this app with internationalization sometimes, so make sure that when RTL is on, that it will still all work.
+
+- Extend the Tailwind theme configuration (`tailwind.config.js`) for any custom design tokens needed, ensuring they also support dark mode.

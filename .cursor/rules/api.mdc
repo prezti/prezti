@@ -1,0 +1,100 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**API Integration**
+
+- **Use tRPC for all primary type-safe client-server API communication.** Define procedures within feature-specific routers.
+- Adhere to tRPC best practices for API design and client-server communication.
+- Use Next.js API routes primarily for specific use cases like **external webhook handlers (e.g., Stripe, Lemon Squeezy, GitHub), integrations requiring standard REST endpoints, or specific serverless functions not suitable for tRPC procedures (e.g., simple health checks).**
+- Use `Promise.all` or `Promise.allSettled` for concurrent asynchronous operations where applicable (e.g., fetching data for multiple components in RSCs, parallel mutations). Structure caching and requests efficiently.
+- Implement tRPC procedures (queries and mutations) on the server within defined routers.
+- Use generated tRPC hooks (`api.feature.getItem.useQuery`, `api.feature.createItem.useMutation`, etc.) on the client for data fetching, mutations, and cache interaction via React Query.
+- Implement proper loading states (leveraging React Query's status and Suspense) and error handling for all tRPC calls on the client, providing meaningful feedback to the user.
+- Utilize the **Supabase JS client (`supabase-js`)** for all database interactions (queries, insertions, updates, deletions) within tRPC procedures or Server Actions.
+- **Actively avoid the N+1 Query Problem** by using Supabase JS client's features for selecting related data efficiently (e.g., `select('*, related_table(*)')`) and batching data loading where appropriate.
+
+**tRPC Integration (Example Structure)**
+
+1.  Router Structure (`/server/api/routers/`)
+2.  Client Setup (`/utils/api.ts`, `/providers/trpc-provider.tsx`)
+3.  Key Principles:
+
+- Use procedure builders: `publicProcedure`, `protectedProcedure`
+- Input validation with Zod schemas **on the server**
+- Leverage TypeScript inference for inputs/outputs
+- Handle errors using `TRPCError` on the server and `try/catch` with error code checking on the client
+- Integrate tightly with React Query for background updates
+- Utilize React Suspense for loading states with Server Components and tRPC
+- Use query batching (enabled by `httpBatchLink`)
+- Implement optimistic updates judiciously for a smoother UX on critical, fast mutations
+
+    ```typescript
+    // src/server/api/root.ts
+    import { createTRPCRouter } from '@/server/api/trpc';
+    import { exampleRouter } from '@/server/api/routers/example';
+
+    export const appRouter = createTRPCRouter({
+      example: exampleRouter,
+      // ... other feature routers
+    });
+
+    export type AppRouter = typeof appRouter;
+
+    // src/server/api/routers/example.ts
+    import { z } from 'zod';
+    import { createTRPCRouter, publicProcedure, protectedProcedure } from '@/server/api/trpc';
+    import { TRPCError } from '@trpc/server';
+
+    const itemSchema = z.object({ name: z.string().min(1) });
+
+    export const exampleRouter = createTRPCRouter({
+      getItem: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .query(async ({ ctx, input }) => {
+          // Use Supabase client for querying
+          const { data: item, error } = await ctx.supabase
+            .from('items')
+            .select(`
+              *,
+              related_items (*)
+            `)
+            .eq('id', input.id)
+            .maybeSingle();
+
+          if (error) {
+            console.error('Supabase error fetching item:', error);
+            throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch item' });
+          }
+          if (!item) {
+            throw new TRPCError({ code: 'NOT_FOUND' });
+          }
+          return item;
+        }),
+
+      createItem: protectedProcedure
+        .input(itemSchema)
+        .mutation(async ({ ctx, input }) => {
+          const { data: newItem, error } = await ctx.supabase
+            .from('items')
+            .insert({
+              name: input.name,
+              owner_id: ctx.session.user.id,
+            })
+            .select()
+            .single();
+
+          if (error) {
+            console.error('Supabase error creating item:', error);
+            throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to create item' });
+          }
+          if (!newItem) {
+            throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to retrieve created item' });
+          }
+          return newItem;
+        }),
+    });
+
+
+    ```

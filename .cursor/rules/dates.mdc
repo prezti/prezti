@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**date-fns Usage**
+
+- Use `date-fns` for **all** date parsing, formatting, manipulation, and comparison logic.
+- Avoid using the native `Date` object directly for calculations or formatting where possible to ensure consistency and avoid timezone pitfalls. Use UTC for server-side date storage and manipulation where appropriate.
+
+- Use functions like `format`, `parseISO`, `addDays`, `isBefore`, `differenceIn...`, `formatDistanceToNow`, etc.

@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**SEO**
+
+- Utilize Next.js App Router's built-in metadata API (`generateMetadata` function) for dynamic page titles, descriptions, and Open Graph tags, especially for public-facing pages or shared boards/templates (_future_).
+- Implement structured data (JSON-LD) for relevant public content types to enhance search engine understanding.
+- Ensure proper semantic HTML structure (headings, landmarks) throughout the application for accessibility and SEO.
+- Optimize for performance (Core Web Vitals) as it significantly impacts SEO rankings.
+

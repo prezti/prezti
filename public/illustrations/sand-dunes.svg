@@ -1,0 +1,33 @@
+<svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sandGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef7ed;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#fed7aa;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#f97316;stop-opacity:0.6" />
+    </linearGradient>
+    <linearGradient id="sandGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fed7aa;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#fdba74;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:0.5" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background dune -->
+  <path d="M0,200 Q100,120 200,140 Q300,160 400,120 L400,200 Z" 
+        fill="url(#sandGradient2)" opacity="0.6"/>
+  
+  <!-- Middle dune -->
+  <path d="M0,200 Q80,140 160,150 Q240,160 320,130 Q360,120 400,135 L400,200 Z" 
+        fill="url(#sandGradient1)" opacity="0.7"/>
+  
+  <!-- Foreground dune -->
+  <path d="M0,200 Q60,160 120,170 Q180,180 240,160 Q300,140 400,150 L400,200 Z" 
+        fill="url(#sandGradient1)" opacity="0.8"/>
+  
+  <!-- Sand particles (subtle texture) -->
+  <circle cx="50" cy="180" r="0.5" fill="#d97706" opacity="0.3"/>
+  <circle cx="120" cy="175" r="0.5" fill="#d97706" opacity="0.4"/>
+  <circle cx="200" cy="185" r="0.5" fill="#d97706" opacity="0.2"/>
+  <circle cx="280" cy="170" r="0.5" fill="#d97706" opacity="0.3"/>
+  <circle cx="350" cy="165" r="0.5" fill="#d97706" opacity="0.2"/>
+</svg> 

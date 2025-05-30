@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+<Important>
+We do NOT implement automated testing (unit tests, integration tests, etc.). This is an explicit decision to prioritize rapid development and iteration. AI assistants should never suggest or create test files.
+
+</Important>

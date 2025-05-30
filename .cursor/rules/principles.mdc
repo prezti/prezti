@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Guiding Principle: Prioritize Clarity and Maintainability.**
+While these rules provide strict guidance, if adhering to a rule significantly compromises code readability or introduces unnecessary complexity for a specific edge case, document the deviation and reasoning clearly in code comments or commit messages. When in doubt, favor the simpler, more understandable approach.
+

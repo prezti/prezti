@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- **Always Use Function Calls** - When using function calling commands, always use function calls.

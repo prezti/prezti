@@ -1,0 +1,30 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Documentation Standards**
+
+- **Focus & Scope:** Documentation should prioritize development and product-focused content. Business aspects, while important, are not included in technical documentation or markdown files. Marketing content may occasionally be included but is secondary to technical documentation.
+- **JSDoc Comments:** Add JSDoc comments for all public functions, components, and complex utilities:
+    ````typescript
+    /**
+     * Processes board data and applies AI enrichment to specified columns
+     * @param boardData - The raw board data structure
+     * @param aiColumns - Array of column IDs to process with AI
+     * @param options - Processing options including model and temperature
+     * @returns Promise resolving to enriched board data
+     * @example
+     * ```typescript
+     * const enriched = await processBoard(data, ['col_1'], { model: 'gpt-4' });
+     * ```
+     */
+    async function processBoard(
+    	boardData: BoardData,
+    	aiColumns: string[],
+    	options: ProcessOptions,
+    ): Promise<EnrichedBoardData>
+    ````
+- **Type Documentation:** Provide clear descriptions for complex types and interfaces
+
+- **Inline Comments:** Use sparingly for complex business logic, focusing on "why" not "what"

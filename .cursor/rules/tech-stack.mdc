@@ -1,0 +1,140 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI, TailwindCSS, Framer Motion, Supabase, tRPC, Zod, React Hook Form, Zustand, Drizzle ORM (for Schema/Migrations), dnd-kit, NUQs, and date-fns.**
+
+## **Architecture**
+
+**Technology Stack:** Next.js App Router + Supabase (Auth/Storage/Realtime/Database) + Drizzle (Schema/Migrations) + tRPC (API) + Zustand (Client State) + Observability (PostHog)
+
+**Code Style and Structure**
+
+- Write concise, technical TypeScript code with accurate examples.
+- Use functional and declarative programming patterns; avoid classes.
+- Prefer iteration and modularization over code duplication.
+- Use descriptive variable names. For simple boolean flags, auxiliary verbs are acceptable (e.g., `hasError`, `isComplete`).
+- Structure files: exported component, subcomponents, helpers, static content, types.
+- **Organize code to match data flow:** Group related operations on the same data together to improve readability and maintainability. For example:
+
+    ```typescript
+    // Bad: Operations on different data are interleaved
+    function getSandwich(bread: Bread, pasture: Pasture): Sandwich {
+      const cow = pasture.getCow();
+      const slicedBread = bread.slice(); // Bread operation interrupting milk flow
+      const milk = cow.getMilk();        // Back to milk
+      const toast = toastBread(slicedBread); // Back to bread
+      const cheese = makeCheese(milk);      // Back to milk
+      return new Sandwich(cheese, toast);
+    }
+
+    // Good: Operations are grouped by data flow
+    function getSandwich(bread: Bread, pasture: Pasture): Sandwich {
+      // Milk to cheese flow
+      const cow = pasture.getCow();
+      const milk = cow.getMilk();
+      const cheese = makeCheese(milk);
+
+      // Bread to toast flow
+      const slicedBread = bread.slice();
+      const toast = toastBread(slicedBread);
+
+      return new Sandwich(cheese, toast);
+    }
+    ```
+
+**Naming Conventions**
+
+- Use lowercase with dashes for directories and components (e.g., `components/auth-wizard/login-signup-form.tsx`).
+- Favor named exports for components.
+
+**TypeScript Usage**
+
+- Use TypeScript for all code; prefer `type` over `interface`.
+- Avoid `enum`s; use `as const` objects or maps instead for better type safety and tree-shaking.
+- Use functional components with TypeScript types for props and state.
+- Use Zod for all runtime validation (API inputs/outputs, forms).
+- Prefer `function` keyword over `const` arrow functions for defining top-level or exported named functions.
+    - _Rationale: Provides clearer hoisting behavior and distinguishes function declarations from variable assignments._ Arrow functions are suitable for inline callbacks, component props, or where lexical `this` is needed.
+
+**Syntax and Formatting**
+
+- Use the `function` keyword for defining named functions where appropriate (see TypeScript Usage).
+- Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
+- Use declarative JSX.
+
+**UI and Styling**
+
+- Use Shadcn UI, Radix UI primitives, and TailwindCSS for components and styling.
+- Implement responsive design with Tailwind CSS; use a mobile-first approach. **If mobile responsiveness wasn't mentioned and you're modifying styling, add necessary responsive classes, thinking like an expert frontend responsive designer.**
+- Utilize Tailwind's `@apply` directive **sparingly**. Prefer component composition and direct utility classes first. Use `@apply` primarily for extracting complex, repeated component-specific utility patterns that cannot be easily achieved otherwise (e.g., complex gradient text styles, multi-property animations applied frequently within a specific component). Avoid using it for basic layout or color combinations.
+- Use dnd-kit for drag and drop functionality.
+
+**Performance Optimization**
+
+- Minimize 'use client', 'useEffect', and 'useState'; favor React Server Components (RSC) wherever possible.
+- Wrap client components (`'use client'`) in `<Suspense>` with an appropriate fallback (e.g., skeleton loader).
+- Use `React.lazy` and `next/dynamic` for dynamic loading of non-critical client components.
+- **Strategic Memoization:** With React Compiler handling automatic memoization in production, focus on strategic memoization for development performance and complex computations:
+    - Memoize expensive calculations (`useMemo`)
+    - Memoize callbacks passed to deeply nested components (`useCallback`)
+    - Use `React.memo` for components with complex props that change frequently
+    - Let React Compiler handle routine optimizations
+- Always show a skeleton loader or meaningful fallback UI for suspended components.
+- Make smaller, focused components when it improves readability, reusability, or performance. Break down components based on **logical separation of concerns, reusability, and state management complexity**, not just line count. Consider splitting if: a part is clearly reusable, it manages distinct pieces of state, it simplifies complex conditional rendering, OR if the component becomes difficult to reason about (often correlating with >150-200 lines).
+- Optimize images: use `next/image` component, implement `priority` prop for LCP images, use lazy loading (`loading="lazy"`) for below-the-fold images, provide `sizes` attribute, and use appropriate formats (e.g., WebP).
+- Optimize Web Vitals (LCP, CLS, INP) by following Next.js best practices (font optimization, critical CSS, reducing layout shifts, minimizing main thread work, efficient hydration).
+
+**Bundle Optimization**
+
+- Use `next/dynamic` for code-splitting large client components that aren't immediately needed
+- Tree-shake unused utility libraries and imports
+- Avoid importing entire libraries when only specific functions are needed
+- Use top-level `await` sparingly to prevent blocking the entire module
+
+**Component Organization**
+
+Based on current `/src/components/` structure:
+
+```
+/components/
+/ui/           # Shadcn UI components and primitives
+/common/       # Reusable business components across features
+/app/          # App-specific, non-reusable components
+/[feature]/    # Feature-specific components (ai/, auth/, billing/, chat/, etc.)
+/global/       # App-wide layout components (navbar, footer, etc.)
+/providers/    # React context providers and wrappers
+```
+
+**Key Conventions**
+
+- Use `nuqs` for URL search parameter state management on the client-side.
+- Separate code into logical files: hooks, components, utility functions, constants (`UPPERCASE_SNAKE_CASE`), types, etc. Files should be named with the `kebab-case` convention only.
+- **Import Conventions:**
+    - **Toast notifications:** Import from `@/utils/toast` instead of directly from `sonner` for consistent configuration and enhanced functionality.
+    - **Icons:** Use the Icon component from `@/components/ui/icon` with Lucide icon names in UPPERCASE format: `<Icon name="LUCIDE_UPPERCASE_NAME" />`. Examples: `<Icon name="Lightbulb" />`, `<Icon name="ArrowLeft" />` (note capitalization of compound words). This provides versatility and allows for easy icon swapping across the application. You must capitalize it like I wrote, it won't work lower case names. Don't use any other icon abstractions/libraries.
+- **When refactoring components/hooks, first outline the necessary props, state, and logic for each new file before writing code to ensure functionality is preserved.**
+- Always adhere to accessibility standards: Use semantic HTML tags, ensure keyboard navigation, manage focus appropriately (`tabIndex` where needed), provide screen-reader-only content (`sr-only`) where necessary, use ARIA attributes correctly when semantics are insufficient, and follow WCAG 2.2 guidelines.
+- Define application routes in a central `routes.ts` file using a structured approach (e.g., `Routes.example({ params })`).
+- **Prefer descriptive state representations over simple booleans where beneficial.**
+    - _Rationale: Improves clarity, maintainability, and enables tracking state transitions._
+    - Use descriptive state enums/unions (e.g., `loadingState: 'idle' | 'loading' | 'success' | 'error'`) instead of simple booleans (`isLoading`) _when the state represents more than two possibilities or when tracking the transition is important_.
+    - Use descriptive booleans (like `hasError: boolean`, `isComplete: boolean`, `isModalOpen: boolean`) for simple true/false conditions where extra states aren't anticipated or needed. Avoid ambiguous booleans.
+- Limit `'use client'`:
+    - Favor Server Components and Next.js Server Actions/SSR/SSG for data fetching and rendering.
+    - Use `'use client'` only for components requiring browser APIs, interactivity (event handlers, state hooks like `useState`, `useEffect`, `useReducer`), or specific third-party libraries that need the client environment (like Framer Motion). Keep these components as small and specific ("leaf" components) as possible.
+    - Avoid using `'use client'` solely for data fetching or global state management (use RSCs, tRPC/React Query, or Zustand as appropriate).
+
+**Error Handling**
+
+- Implement robust error handling using `try/catch` blocks in async functions (tRPC procedures, Server Actions, event handlers).
+- Create and use custom error classes extending `Error` for specific, anticipated error scenarios where needed for better error categorization and handling.
+- **Error Boundaries:** Reference existing `/src/components/error-boundary.tsx` for patterns:
+    - Wrap route segments and major UI sections in Error Boundaries
+    - Provide graceful fallback UI with retry mechanisms
+    - Log errors to Posthog(they've added sentry like error handling) with relevant context (user ID, workspace ID, component name)
+    - Display user-friendly error messages, not technical stack traces
+- Utilize Supabase's specific error types and codes (e.g., `AuthApiError`) for handling errors originating from Supabase client calls (primarily Auth, Storage, Realtime).
+- Handle tRPC errors effectively on the client, checking for `TRPCError` instances and specific error codes (e.g., `UNAUTHORIZED`, `NOT_FOUND`, `BAD_REQUEST`, `INTERNAL_SERVER_ERROR`) to provide appropriate user feedback or trigger specific actions (e.g., redirect to login).
+
