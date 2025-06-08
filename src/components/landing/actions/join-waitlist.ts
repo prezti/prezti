@@ -1,27 +1,15 @@
 'use server'
 
 import { supabase } from '@/lib/supabase'
-import type { CreateWaitlistEmailInput, JoinWaitlistResponse } from '@/lib/types/waitlist'
+import {
+	createWaitlistEmailSchema,
+	waitlistFormSchema,
+	type JoinWaitlistResponse,
+} from '@/lib/types/waitlist'
 import { safeExtractGeoDetails } from '@/utils/geo'
 import { revalidateTag, unstable_cache } from 'next/cache'
 import { headers } from 'next/headers'
-import { z } from 'zod'
 
-// Enhanced validation schema with stricter rules for production
-const waitlistSchema = z.object({
-	email: z
-		.string()
-		.trim()
-		.min(1, 'Email is required')
-		.email('Please enter a valid email address')
-		.max(254, 'Email address is too long')
-		.toLowerCase()
-		.refine((email) => {
-			// Additional email validation for production
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-			return emailRegex.test(email)
-		}, 'Please enter a valid email address'),
-})
 /**
  * Get the current waitlist count with caching
  * Uses Next.js 15's caching with 5-minute revalidation
@@ -68,11 +56,11 @@ function getClientIP(headersList: Headers): string {
 
 /**
  * Production-ready waitlist signup with comprehensive error handling,
- * rate limiting, caching, and revalidation
+ * caching, and revalidation
  */
 export async function joinWaitlist(formData: FormData): Promise<JoinWaitlistResponse> {
 	try {
-		// Extract and validate email
+		// Extract and validate email from form data
 		const emailRaw = formData.get('email')
 
 		if (!emailRaw || typeof emailRaw !== 'string') {
@@ -81,17 +69,17 @@ export async function joinWaitlist(formData: FormData): Promise<JoinWaitlistResp
 			}
 		}
 
-		// Get headers for rate limiting and geo data
+		// Get headers for geo data and IP tracking
 		const headersList = await headers()
 		const clientIP = getClientIP(headersList)
 
-		// Validate email with enhanced schema
-		const validatedFields = waitlistSchema.safeParse({
+		// Validate email with Zod schema
+		const emailValidation = waitlistFormSchema.safeParse({
 			email: emailRaw,
 		})
 
-		if (!validatedFields.success) {
-			const firstError = validatedFields.error.errors[0]
+		if (!emailValidation.success) {
+			const firstError = emailValidation.error.errors[0]
 			return {
 				error: firstError?.message || 'Please enter a valid email address',
 			}
@@ -104,30 +92,35 @@ export async function joinWaitlist(formData: FormData): Promise<JoinWaitlistResp
 
 		const { individualFields } = safeExtractGeoDetails(request)
 
-		// Prepare the data for insertion with proper typing
-		const insertData: CreateWaitlistEmailInput = {
-			email: validatedFields.data.email,
-			// Convert coordinates to strings for decimal fields (Supabase will handle the conversion)
+		// Prepare the data for insertion with proper validation
+		const insertDataValidation = createWaitlistEmailSchema.safeParse({
+			email: emailValidation.data.email,
 			latitude: individualFields.latitude,
 			longitude: individualFields.longitude,
 			city: individualFields.city,
 			country: individualFields.country,
 			timezone: individualFields.timezone,
 			formatted_date: individualFields.formattedDate,
-			// Remove created_at since schema handles it automatically with defaultNow()
+		})
+
+		if (!insertDataValidation.success) {
+			console.error('Data validation failed:', insertDataValidation.error)
+			return {
+				error: 'Invalid data provided. Please try again.',
+			}
 		}
 
 		// Save to Supabase waitlist_emails table with comprehensive error handling
 		const { data, error } = await supabase
 			.from('waitlist_emails')
-			.insert(insertData)
+			.insert(insertDataValidation.data)
 			.select('id, email, created_at')
 			.single()
 
 		if (error) {
 			console.error('Supabase error saving waitlist email:', {
 				error,
-				email: validatedFields.data.email,
+				email: emailValidation.data.email,
 				ip: clientIP,
 				timestamp: new Date().toISOString(),
 			})
@@ -167,7 +160,7 @@ export async function joinWaitlist(formData: FormData): Promise<JoinWaitlistResp
 		// Success logging with anonymized data
 		console.log('New waitlist signup saved:', {
 			id: data?.id,
-			emailDomain: validatedFields.data.email.split('@')[1],
+			emailDomain: emailValidation.data.email.split('@')[1],
 			location: `${individualFields.city || 'Unknown'}, ${individualFields.country || 'Unknown'}`,
 			timestamp: new Date().toISOString(),
 		})
