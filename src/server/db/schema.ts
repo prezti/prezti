@@ -1,4 +1,4 @@
-import { decimal, index, pgTable, serial, timestamp, uniqueIndex, varchar } from 'drizzle-orm/pg-core'
+import { index, pgTable, serial, timestamp, uniqueIndex, varchar } from 'drizzle-orm/pg-core'
 
 /**
  * Waitlist emails table for storing email signups with geographic details
@@ -10,9 +10,10 @@ export const waitlistEmails = pgTable(
 	{
 		id: serial('id').primaryKey(),
 		email: varchar('email', { length: 254 }).notNull().unique(), // RFC 5321 max email length
-		// Using decimal for better precision in coordinates
-		latitude: decimal('latitude', { precision: 10, scale: 8 }), // -90.00000000 to 90.00000000
-		longitude: decimal('longitude', { precision: 11, scale: 8 }), // -180.00000000 to 180.00000000
+		// Using varchar for coordinates since they come as strings from geo headers
+		// and may contain non-numeric values or need to preserve exact format
+		latitude: varchar('latitude', { length: 50 }), // e.g., "37.7749" or null
+		longitude: varchar('longitude', { length: 50 }), // e.g., "-122.4194" or null
 		city: varchar('city', { length: 100 }),
 		country: varchar('country', { length: 100 }),
 		timezone: varchar('timezone', { length: 100 }),
@@ -39,5 +40,5 @@ export type WaitlistEmail = typeof waitlistEmails.$inferSelect
 export type NewWaitlistEmail = typeof waitlistEmails.$inferInsert
 
 // Additional utility types for the application
-export type WaitlistEmailInsert = Omit<NewWaitlistEmail, 'id' | 'updated_at'>
+export type WaitlistEmailInsert = Omit<NewWaitlistEmail, 'id' | 'created_at' | 'updated_at'>
 export type WaitlistEmailUpdate = Partial<Omit<NewWaitlistEmail, 'id' | 'created_at'>>

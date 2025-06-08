@@ -29,29 +29,22 @@ export function WaitlistForm() {
 	}
 
 	return (
-		<div className="max-w-md mx-auto">
-			<form id="waitlist-form" action={handleSubmit} className="mb-4">
-				<div className="flex gap-0 bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-700 overflow-hidden">
+		<div className="max-w-md mx-auto px-4 sm:px-0">
+			<form id="waitlist-form" action={handleSubmit} className="mb-6">
+				<div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:rounded-lg sm:border sm:border-gray-700 sm:bg-gray-900/50 overflow-hidden focus-within:border-gray-600 transition-colors">
 					<Input
 						type="email"
 						name="email"
-						placeholder="example@gmail.com"
+						placeholder="Enter your email"
 						required
 						disabled={isPending}
-						className="flex-1 bg-transparent border-0 text-white placeholder:text-gray-500 rounded-s-lg rounded-t-lg rounded-b-lg rounded-e-none focus:ring-0 focus:outline-none h-12 px-4 disabled:opacity-50"
+						className="flex-1 bg-gray-900/50 sm:bg-transparent border border-gray-700 sm:border-0 text-white placeholder:text-gray-400 focus:ring-0 focus-visible:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-offset-0 h-12 px-4 disabled:opacity-50 rounded-lg sm:rounded-none"
 					/>
 					<Button
 						type="submit"
 						disabled={isPending}
-						className="bg-white text-black hover:bg-gray-100 h-12 px-6 rounded-none font-medium disabled:opacity-50 flex items-center justify-center min-w-[120px]">
-						{isPending ? (
-							<Loader2 className="h-5 w-5 animate-spin" />
-						) : (
-							<>
-								Join Waitlist
-								<span className="ml-2">→</span>
-							</>
-						)}
+						className="bg-white text-black hover:bg-gray-100 h-12 px-6 font-medium disabled:opacity-50 flex items-center justify-center min-w-[110px] rounded-lg sm:rounded-none sm:border-l sm:border-gray-700">
+						{isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Get Early Access'}
 					</Button>
 				</div>
 			</form>
@@ -67,10 +60,9 @@ export function WaitlistForm() {
 			)}
 
 			{/* Social Proof */}
-			<div className="flex items-center justify-center space-x-2 text-green-400 text-sm">
-				<div className="w-2 h-2 bg-green-400 rounded-full"></div>
-				<span>847 people already joined</span>
-			</div>
+			<p className="text-center text-sm text-gray-400">
+				Join <span className="text-blue-400 font-medium">847+ developers</span> in the waitlist
+			</p>
 		</div>
 	)
 }
